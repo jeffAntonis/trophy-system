@@ -8,7 +8,7 @@ export default function Main(props) {
 
   return (
     <div style={{ flexGrow: 1 }}>
-      <Header />
+      <Header {...props} />
       <Container>
         Opa
       </Container>

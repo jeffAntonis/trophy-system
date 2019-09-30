@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box, TextField, Button, Select, Paper, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from "@material-ui/core";
-import { ExpandMore } from "@material-ui/icons";
+import { Container, Typography, Box, TextField, Button, Select, Paper, Divider } from "@material-ui/core";
 
 import api from '../../services/api';
 import Header from '../../components/Header';
+import HistoricDeaths from './HistoricDeaths';
+import HistoricCollectedCoin from './HistoricCollectedCoin';
+import HistoricKilledMonster from './HistoricKilledMonster';
 
 export default function Details(props) {
   const [user, setUser] = useState([]);
+  const [get, setGet] = useState('');
   const [trophys, setTrophys] = useState([]);
   const [monsters, setMonsters] = useState([]);
   const [formState, setFormState] = useState({
@@ -26,7 +29,6 @@ export default function Details(props) {
     try {
       const response = await api.get(`/trophy_user/${props.match.params.id}`);
       setTrophys(response.data.data);
-      console.log(response.data.data)
     } catch (error) {
       console.log(error.response);
     }
@@ -39,10 +41,6 @@ export default function Details(props) {
     } catch (error) {
       console.log(error.response);
     }
-  }
-
-  async function getCoinsCollected(){
-    
   }
 
   useEffect(() => {
@@ -59,6 +57,7 @@ export default function Details(props) {
       });
 
       setFormState({ ...formState, valueCoin: '' });
+      setGet(response.data.data.length);
       alert('Moeda coletada com sucesso!');
     } catch (error) {
       console.log(error.response);
@@ -75,6 +74,7 @@ export default function Details(props) {
       });
 
       setFormState({ ...formState, monster_id: '' });
+      setGet(response.data.data.length);
       alert('Abate registrado com sucesso!');
     } catch (error) {
       console.log(error.response);
@@ -89,6 +89,7 @@ export default function Details(props) {
         user_id: props.match.params.id
       });
       alert('Morte registrada com sucesso!');
+      setGet(response.data.data.length);
     } catch (error) {
       console.log(error.response);
     } finally {
@@ -112,11 +113,23 @@ export default function Details(props) {
           </Typography>
 
           {trophys.map((trophy, index) => (
-            <Box key={index} display="flex" flexDirection="row">
-              Troféu: {trophy.type_trophy}
-              Nível: {trophy.name}
-              {trophy.type_trophy === 'killed_monster' && `Monster: ${trophy.monster_id}`}
-            </Box>
+            <>
+              <Box key={index} display="flex" flexDirection="column" mt={2} mb={2}>              
+                <Typography variant="subtitle2">
+                  Troféu: {trophy.type_trophy}
+                </Typography>
+                <Typography variant="subtitle2">
+                  Nível: {trophy.name}
+                </Typography>
+
+                {trophy.type_trophy === 'killed_monster' && (
+                  <Typography variant="subtitle2">
+                    Monstro: {trophy.nm_monster}
+                  </Typography>
+                )}
+              </Box>
+              <Divider />
+            </>
           ))}
         </Box>
 
@@ -183,53 +196,9 @@ export default function Details(props) {
           </Typography>
         </Box>
 
-        <ExpansionPanel>
-          <ExpansionPanelSummary
-            expandIcon={<ExpandMore />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography>Moedas Coletadas</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-              sit amet blandit leo lobortis eget.
-          </Typography>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-
-        <ExpansionPanel>
-          <ExpansionPanelSummary
-            expandIcon={<ExpandMore />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography>Mortes Registradas</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-              sit amet blandit leo lobortis eget.
-          </Typography>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
-
-        <ExpansionPanel>
-          <ExpansionPanelSummary
-            expandIcon={<ExpandMore />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography>Monstros Abatidos</Typography>
-          </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-              sit amet blandit leo lobortis eget.
-          </Typography>
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
+        <HistoricDeaths user_id={props.match.params.id} get={get} />
+        <HistoricKilledMonster user_id={props.match.params.id} get={get} />
+        <HistoricCollectedCoin user_id={props.match.params.id} get={get} />
       </Container>
     </div>
   );

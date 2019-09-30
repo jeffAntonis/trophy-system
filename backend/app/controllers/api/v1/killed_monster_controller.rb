@@ -21,6 +21,11 @@ module Api
 					end 
 				end
 			end
+
+			def getByUser
+				collectedKilledMonster = KilledMonster.select(:id, :created_at, :updated_at, 'monsters.name').joins(:monster).where(user_id: params['id'])
+				render json: {status: 'SUCCESS', message:'Abates carregados', data:collectedKilledMonster},status: :ok
+			end
     end
 	end
 end

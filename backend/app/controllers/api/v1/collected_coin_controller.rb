@@ -21,6 +21,11 @@ module Api
 					end 
 				end
 			end
+
+			def getByUser
+				collectedCoin = CollectedCoin.where(user_id: params['id'])
+				render json: {status: 'SUCCESS', message:'Moedas carregadas', data:collectedCoin},status: :ok
+			end
     end
 	end
 end

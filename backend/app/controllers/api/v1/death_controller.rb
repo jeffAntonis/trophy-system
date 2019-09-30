@@ -22,6 +22,11 @@ module Api
 					end 
 				end
 			end
+
+			def getByUser
+				collectedDeath = Death.where(user_id: params['id'])
+				render json: {status: 'SUCCESS', message:'Mortes carregadas', data:collectedDeath},status: :ok
+			end
     end
 	end
 end
