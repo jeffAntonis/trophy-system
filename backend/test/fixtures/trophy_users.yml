@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  trophy: one
+  monster: one
+
+two:
+  user: two
+  trophy: two
+  monster: two
